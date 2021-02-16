@@ -147,22 +147,75 @@ sizes = [percent_rest, percent_911]
 explode = (0, 0.1)
 colors = ['#66b3ff','#ff9999']
 
-fig1, ax1 = plt.subplots()
-ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90, colors=colors)
+# fig1, ax1 = plt.subplots()
+# ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+#         shadow=True, startangle=90, colors=colors)
 
-# Equal aspect ratio ensures that pie is drawn as a circle
-ax1.axis('equal')
-ax1.set_title('Fatalities of 9/11', fontweight='bold', fontsize=18)
+# # Equal aspect ratio ensures that pie is drawn as a circle
+# ax1.axis('equal')
+# ax1.set_title('Fatalities of 9/11', fontweight='bold', fontsize=18)
 
-plt.tight_layout()
-plt.savefig('911_pie_chart.png')
+# plt.tight_layout()
+# plt.savefig('911_pie_chart.png')
 
 cat_names = ['rank', 'classification', 'cause_of_death', 'nature_of_death', 'activity', 'emergency', 'duty', 'property_type', 'memorial_fund_info']
 cont_names = ['age', 'incident_date', 'date_of_death']
 
 print('Number of categorial columns: ', len(cat_names))
 print('Number of continous columns: ', len(cont_names))
+
+
+len_df = len(df)
+df_incident = df.sort_values(by=['incident_date'])
+df_death = df.sort_values(by=['date_of_death'])
+
+
+df_incident['counter'] = range(1, len_df + 1)
+df_death['counter'] = range(1, len_df + 1)
+
+print(df_incident.columns)
+
+df_incident['year'] = df['incident_date'].dt.year
+df_incident['month'] = df['incident_date'].dt.month
+
+df_incident_transform = df_incident[['incident_date', 'year', 'month', 'counter']]
+print(df_incident_transform.head())
+
+df_incident_transform = df_incident_transform.drop(df_incident_transform[df_incident_transform.year < 2000].index)
+# df = df.drop(df[df.score < 50].index)
+print(df_incident_transform['year'].unique())
+
+g = sns.lineplot(data=df_incident_transform, x='year', y='counter')
+plt.title('Number of Incidents Over Time', fontsize=15)
+plt.xlabel('Date')
+plt.ylabel('# of Occurances')
+plt.show()
+
+wide_incident = df_incident_transform.pivot("year", "month", "counter")
+print(wide_incident.info)
+
+
+
+
+# g = sns.lineplot(data=df_death, x="date_of_death", y="counter")
+# plt.show()
+
+
+
+
+# temp['temp col'] = pd.Series(range(1, 2012 + 1 ,1))
+# print(temp['temp col'].tail())
+
+
+# cat_names = ['rank', 'classification', 'cause_of_death', 'nature_of_death', 'activity', 'emergency', 'duty', 'property_type', 'memorial_fund_info']
+# cont_names = ['age', 'incident_date', 'date_of_death']
+
+
+
+
+'''
+Graphs / Charts Code
+
 
 # Ranks
 # Get only top 10 ranks from dataset
@@ -296,10 +349,5 @@ with sns.axes_style("ticks"):
     plt.ylabel('Count')
     plt.savefig('date_death_bins.png', bbox_inches='tight', pad_inches=0.25)
 
-temp = df.copy()
-temp['temp col'] = pd.Series(range(1, 2012 + 1 ,1))
-print(temp['temp col'].tail())
 
-
-# cat_names = ['rank', 'classification', 'cause_of_death', 'nature_of_death', 'activity', 'emergency', 'duty', 'property_type', 'memorial_fund_info']
-# cont_names = ['age', 'incident_date', 'date_of_death']
+'''
