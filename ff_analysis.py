@@ -134,7 +134,7 @@ df_911 = df_911.loc[df_911['emergency'].str.lower() == 'yes']
 
 # Drop the 9/11 fatalities from the dataset and save a copy off all fatalities for later use
 df_all = df.copy()
-df = df.drop(df[(df['incident_date'] == pd.Timestamp('2001-09-11')) * (df['emergency'].str.lower() == 'yes')].index)
+df = df.drop(df[(df['incident_date'] == pd.Timestamp('2001-09-11')) & (df['emergency'].str.lower() == 'yes')].index)
 
 percent_911 = round(len(df_911) / len(df_all), 2) * 100
 percent_rest = 100 - percent_911
@@ -296,5 +296,10 @@ with sns.axes_style("ticks"):
     plt.ylabel('Count')
     plt.savefig('date_death_bins.png', bbox_inches='tight', pad_inches=0.25)
 
-sns.boxplot(data=dod_df, x='date_of_deathDayofweek', height=6, aspect=10/6)
-plt.show()
+temp = df.copy()
+temp['temp col'] = pd.Series(range(1, 2012 + 1 ,1))
+print(temp['temp col'].tail())
+
+
+# cat_names = ['rank', 'classification', 'cause_of_death', 'nature_of_death', 'activity', 'emergency', 'duty', 'property_type', 'memorial_fund_info']
+# cont_names = ['age', 'incident_date', 'date_of_death']
